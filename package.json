@@ -23,7 +23,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.ts": "prettier --write"
+    "*.ts": "prettier --write && eslint --fix"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
