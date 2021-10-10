@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { GameModule } from './game/game.module'
+import { RoomModule } from './room/room.module'
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { GameModule } from './game/game.module'
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     GameModule,
+    RoomModule
   ],
   controllers: [AppController],
   providers: [AppService],
