@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
 
 import { AppController } from './app.controller'
@@ -7,9 +8,11 @@ import { GameModule } from './game/game.module'
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      `mongodb+srv://beam-corp:${process.env.db_key}@cluster0.x6626.gcp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
-    ),
+    ConfigModule.forRoot({
+      envFilePath: ['.env.local', '.env.development', '.env'],
+      isGlobal: true,
+    }),
+    MongooseModule.forRoot(process.env.DB_URI),
     GameModule,
   ],
   controllers: [AppController],
