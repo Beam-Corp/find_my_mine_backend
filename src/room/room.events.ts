@@ -5,7 +5,9 @@ export enum RoomEvents {
   ON_LEAVE = "on-leave",
   JOIN = "join",
   ON_JOIN = 'on-join',
-  INTRODUCE = "introduce"
+  INTRODUCE = "introduce",
+  GET_PLAYERS = "get-players",
+  ON_GET_PALYERS="on-get-players"
 }
 export interface Introduction {
   username: string,
