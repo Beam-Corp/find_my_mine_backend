@@ -11,3 +11,10 @@ export enum GameEvents {
   ON_TIME_UP = 'on-time-up',
   ON_GAME_END = 'on-game-end',
 }
+
+export interface GameState {
+  roomId: string
+  gridState: number[][]
+  scoreState: number[]
+  playerTurn: number
+}
