@@ -10,12 +10,16 @@ import {
 
 import { Socket, Server } from 'socket.io'
 
-import { GameEvents } from './game.events'
+import { GameEvents, GameState } from './game.events'
 
 @WebSocketGateway({ cors: true })
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server
   private logger: Logger = new Logger('GameGateway')
+
+  afterInit() {
+    this.logger.log('Init')
+  }
 
   @SubscribeMessage('msgToServer')
   handleMessage(client: Socket, payload: string): void {
@@ -29,8 +33,17 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.server.to(roomId).emit(GameEvents.ON_STARTED, payload)
   }
 
-  afterInit(server: Server) {
-    this.logger.log('Init')
+  @SubscribeMessage(GameEvents.SELECT_BLOCK)
+  handleSelectBlock(client: Socket, gameState: GameState): void {
+    this.logger.log(`Select block`)
+    this.server.to(gameState.roomId).emit(GameEvents.ON_SELECTED, gameState)
+  }
+
+  @SubscribeMessage(GameEvents.TIME_UP)
+  handleTimeUp(client: Socket, gameState: GameState): void {
+    this.logger.log(`Time Up`)
+
+    this.server.to(gameState.roomId).emit(GameEvents.ON_TIME_UP, gameState)
   }
 
   handleDisconnect(client: Socket) {
