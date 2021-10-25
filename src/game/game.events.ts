@@ -18,3 +18,8 @@ export interface GameState {
   scoreState: number[]
   playerTurn: number
 }
+
+export interface GameStartPayload {
+  gridState: number[][]
+  playerTurn: number
+}
