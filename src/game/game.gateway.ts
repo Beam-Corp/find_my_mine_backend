@@ -10,11 +10,14 @@ import {
 
 import { Socket, Server } from 'socket.io'
 
-import { GameEvents, GameState } from './game.events'
+import { GameEvents, GameStartPayload, GameState } from './game.events'
+import { GameService } from './game.service'
 
 @WebSocketGateway({ cors: true })
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server
+
+  private gameService: GameService = new GameService()
   private logger: Logger = new Logger('GameGateway')
 
   afterInit() {
@@ -29,7 +32,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage(GameEvents.START)
   handleGameInit(client: Socket, roomId: string): void {
     this.logger.log(`Starting Game for room id ${roomId}`)
-    const payload = {}
+    const payload: GameStartPayload = {
+      gridState: this.gameService.generateGrid(12, 6),
+      playerTurn: this.gameService.randomPlayer(),
+    }
     this.server.to(roomId).emit(GameEvents.ON_STARTED, payload)
   }
 
