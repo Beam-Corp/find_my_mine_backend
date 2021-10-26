@@ -2,7 +2,7 @@ import { Injectable, ExecutionContext, UnauthorizedException, ForbiddenException
 import { AuthGuard } from "@nestjs/passport"
 import { PlayerService } from "src/player/player.service"
 import { AuthService } from "./auth.service"
-import { JwtPayload } from "./jwt.constant"
+import { JwtPayload, Roles } from "./jwt.constant"
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard("jwt") {}
@@ -19,7 +19,7 @@ export class AdminGuard extends AuthGuard("jwt") {
     if (!cookies || !cookies['jwt']) throw new UnauthorizedException()
     const {userId} = this.authService.decodeJwt<JwtPayload>(cookies['jwt'])
     const admin = await this.playerService.findByPlayerId(userId);
-    if (admin.role !== 'Admin') throw new ForbiddenException()
-    return admin.role==='Admin'
+    if (admin.role !== Roles.Admin) throw new ForbiddenException()
+    return admin.role===Roles.Admin
   }
 }
