@@ -1,15 +1,14 @@
 import { Type } from "class-transformer"
-import { IsString, MaxLength, MinLength } from "class-validator"
+import { IsOptional, IsString, MaxLength, MinLength } from "class-validator"
 
 
-export class CustomizationDTO {
+export class Customization {
     @IsString()
     color: string
     @IsString()
     avatar: string
 }
-
-export class RegisterDTO {
+export class PlayerDTO {
     @IsString()
     @MaxLength(12)
     @MinLength(6)
@@ -18,8 +17,9 @@ export class RegisterDTO {
     @MaxLength(12)
     @MinLength(6)
     password: string
-    @Type(() => CustomizationDTO)
-    customization?: CustomizationDTO
+    @Type(() => Customization)
+    @IsOptional()
+    customization?: Customization
 }
 
 export class LoginDTO {
