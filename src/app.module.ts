@@ -6,6 +6,8 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { GameModule } from './game/game.module'
 import { RoomModule } from './room/room.module'
+import { AuthModule } from './auth/auth.module';
+import { PlayerModule } from './player/player.module';
 
 @Module({
   imports: [
@@ -13,9 +15,11 @@ import { RoomModule } from './room/room.module'
       envFilePath: ['.env.local', '.env.development', '.env'],
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.DB_URI || ""),
+    MongooseModule.forRoot(process.env.DB_URI || "mongodb+srv://admin:vkdCbdUlyp9pZ3YR@cluster0.q1gam.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"),
     GameModule,
-    RoomModule
+    RoomModule,
+    AuthModule,
+    PlayerModule
   ],
   controllers: [AppController],
   providers: [AppService],
