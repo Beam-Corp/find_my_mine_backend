@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { PlayerDoucument } from './player.schema';
 import * as bcrypt from 'bcrypt';
 import { RegisterDTO } from './dto/player.dto';
+import { Roles } from 'src/auth/jwt.constant';
 
 @Injectable()
 export class PlayerService {
@@ -21,7 +22,7 @@ export class PlayerService {
     async register({userId,password,customization}: RegisterDTO) {
         if (await this.findByPlayerId(userId)) throw new BadRequestException("UserId already exist");
         const hashedPassword = await bcrypt.hash(password,10);
-        const player = await this.playerModel.create({userId,password: hashedPassword,customization,role: 'player'});
+        const player = await this.playerModel.create({userId,password: hashedPassword,customization,role: Roles.Player});
         return await player.save();
     }
 }
