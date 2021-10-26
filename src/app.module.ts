@@ -15,7 +15,7 @@ import { PlayerModule } from './player/player.module';
       envFilePath: ['.env.local', '.env.development', '.env'],
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.DB_URI || "mongodb+srv://admin:vkdCbdUlyp9pZ3YR@cluster0.q1gam.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"),
+    MongooseModule.forRoot(process.env.DB_URI || ""),
     GameModule,
     RoomModule,
     AuthModule,
