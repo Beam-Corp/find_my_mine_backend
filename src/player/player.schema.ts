@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Customization } from './dto/player.dto';
 
 
 @Schema()
@@ -8,12 +9,10 @@ export class Player {
   userId: string;
   @Prop()
   password: string;
-
   @Prop()
   color: string;
-
   @Prop()
-  avatar: string;
+  customization: Customization;
   @Prop()
   role: string;
 }
