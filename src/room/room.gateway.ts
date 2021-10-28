@@ -15,7 +15,7 @@ export class RoomGateway {
     this.logger.log(`Client disconnected: ${client.id}`)
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket) {
     this.logger.log(`Client connected: ${client.id}`)
   }
   @SubscribeMessage(RoomEvents.ON_CREATE)
@@ -52,9 +52,9 @@ export class RoomGateway {
       this.logger.log(`${client.id} leaves room ${roomId}`)
     }
   }
-  @SubscribeMessage(RoomEvents.ON_GET_PALYERS)
+  @SubscribeMessage(RoomEvents.ON_GET_PLAYERS)
   async getConcurrentPlayers() {
-    const currentPlayers = this.server.sockets.sockets.size;
-    await this.server.emit(RoomEvents.GET_PLAYERS,{current: currentPlayers});
+    const currentPlayers = this.server.sockets.sockets.size
+    await this.server.emit(RoomEvents.GET_PLAYERS, { current: currentPlayers })
   }
 }
