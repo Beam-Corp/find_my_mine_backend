@@ -13,7 +13,7 @@ import { RoomModule } from './room/room.module'
       envFilePath: ['.env.local', '.env.development', '.env'],
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.DB_URI),
+    MongooseModule.forRoot(process.env.DB_URI || ""),
     GameModule,
     RoomModule
   ],

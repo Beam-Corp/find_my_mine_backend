@@ -11,6 +11,13 @@ export class RoomGateway {
   @WebSocketServer() server: Server
   private logger: Logger = new Logger('RoomGateway')
 
+  handleDisconnect(client: Socket) {
+    this.logger.log(`Client disconnected: ${client.id}`)
+  }
+
+  handleConnection(client: Socket) {
+    this.logger.log(`Client connected: ${client.id}`)
+  }
   @SubscribeMessage(RoomEvents.ON_CREATE)
   async handleRoomCreation(client: Socket): Promise<void> {
     const roomId = uuidv4().substring(0, 4)
@@ -44,5 +51,11 @@ export class RoomGateway {
       await client.to(roomId).emit(RoomEvents.LEAVE, username)
       this.logger.log(`${client.id} leaves room ${roomId}`)
     }
+  }
+  @SubscribeMessage(RoomEvents.ON_GET_PLAYERS)
+  async getConcurrentPlayers() {
+    const currentPlayers = this.server.sockets.sockets.size
+    const rooms = [...this.server.sockets.adapter.rooms.keys()].filter((roomId) => roomId.length === 4)
+    await this.server.emit(RoomEvents.GET_PLAYERS, { current: currentPlayers, roomList: rooms })
   }
 }
