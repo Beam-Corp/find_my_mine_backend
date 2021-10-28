@@ -10,7 +10,7 @@ import {
 
 import { Socket, Server } from 'socket.io'
 
-import { GameEvents, GameStartPayload, GameState } from './game.events'
+import { GameEvents, GameStartPayload, GameState, SurrenderState } from './game.events'
 import { GameService } from './game.service'
 
 @WebSocketGateway({ cors: true })
@@ -50,6 +50,27 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.logger.log(`Time Up`)
 
     this.server.to(gameState.roomId).emit(GameEvents.ON_TIME_UP, gameState)
+  }
+
+  @SubscribeMessage(GameEvents.SURRENDER)
+  handleSurrender(client: Socket, surrenderState: SurrenderState): void {
+    this.logger.log(`player ${surrenderState.surrenderer} has surrendered`)
+
+    this.server.to(surrenderState.roomId).emit(GameEvents.ON_SURRENDER, surrenderState)
+  }
+
+  @SubscribeMessage(GameEvents.RESTART)
+  handleRestart(client: Socket, roomId: string): void {
+    this.logger.log(`Restarting Game for room id ${roomId}`)
+    const gameState: GameState = {
+      clickNumber: 0,
+      gridState: this.gameService.generateGrid(12, 6),
+      playerTurn: this.gameService.randomPlayer(),
+      scoreState: [0, 0],
+      roomId: roomId
+    }
+
+    this.server.to(roomId).emit(GameEvents.ON_RESTART, gameState)
   }
 
   handleDisconnect(client: Socket) {
