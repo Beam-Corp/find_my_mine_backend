@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
-import { JwtPayload } from 'src/auth/jwt.constant';
 import { JwtAuthGuard } from 'src/auth/jwt.guards';
 import { LoginDTO, PlayerDTO } from '../player/dto/player.dto';
 import { PlayerService } from '../player/player.service';
@@ -18,6 +17,7 @@ export class AuthController {
           domain: process.env.ORIGIN || "localhost", 
           expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
         })
+        res
         return {userId: player.userId,role: player.role, customization: player.customization}
     }
     @Post("register")

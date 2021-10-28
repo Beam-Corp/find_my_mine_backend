@@ -16,7 +16,8 @@ export class PlayerService {
     async login(userId: string, password: string) {
         const player = await this.findByPlayerId(userId);
         if (!player) throw new BadRequestException("UserId does not exist");
-        if (!bcrypt.compare(password,player.password)) throw new UnauthorizedException("Wrong password");
+        const isPasswordValid = await bcrypt.compare(password,player.password)
+        if (!isPasswordValid) throw new UnauthorizedException("Wrong password");
         return player;
     }
     async register({userId,password,customization}: PlayerDTO) {
