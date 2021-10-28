@@ -2,8 +2,10 @@ import { Body, Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/comm
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt.guards';
+import { Cookies } from 'utils/decorators';
 import { LoginDTO, PlayerDTO } from '../player/dto/player.dto';
 import { PlayerService } from '../player/player.service';
+import { JwtPayload } from './jwt.constant';
 
 @Controller('auth')
 export class AuthController {
@@ -31,6 +33,14 @@ export class AuthController {
     async logout(@Res({passthrough: true}) res:Response) {
         res.clearCookie('jwt')
         return {success: true}
+    }
+    @UseGuards(JwtAuthGuard)
+    @Get("verify")
+    async verify(@Cookies('jwt') token: string ){
+        console.log(token)
+        const payload = this.authService.decodeJwt<JwtPayload>(token);
+        const player = await this.playerService.findByPlayerId(payload.userId);
+        return {userId: player.userId,role: player.role, customization: player.customization};
     }
 
 
