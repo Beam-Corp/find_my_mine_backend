@@ -15,6 +15,11 @@ export class GameService {
   }
 
   generateGrid(bomb: number, size: number) {
+    if (!bomb && !size) {
+      bomb = 12
+      size = 6
+    }
+
     const bombPosition = this.randomUnique(size * size, bomb)
 
     const gameGrid = []
