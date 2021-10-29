@@ -57,7 +57,6 @@ export class RoomGateway {
     // const currentPlayers = this.server.sockets.sockets.size
     const currentPlayers = server?.sockets.sockets.size
     const rooms = server ? [...server.sockets.adapter.rooms.keys()].filter((roomId) => roomId.length === 4) : []
-    this.logger.log('current players: ', currentPlayers)
     await server?.emit(RoomEvents.GET_PLAYERS, { current: currentPlayers ?? 0, roomList: rooms })
   }
 }
