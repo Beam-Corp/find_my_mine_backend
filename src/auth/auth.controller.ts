@@ -37,7 +37,6 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Get("verify")
     async verify(@Cookies('jwt') token: string ){
-        console.log(token)
         const payload = this.authService.decodeJwt<JwtPayload>(token);
         const player = await this.playerService.findByPlayerId(payload.userId);
         return {userId: player.userId,role: player.role, customization: player.customization};
