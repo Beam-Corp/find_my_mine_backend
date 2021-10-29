@@ -12,6 +12,7 @@ import { Socket, Server } from 'socket.io'
 
 import { GameEvents, GameStartPayload, GameStartSettings, GameState, SurrenderState } from './game.events'
 import { GameService } from './game.service'
+import { RoomGateway } from 'src/room/room.gateway'
 
 @WebSocketGateway({ cors: true })
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -19,6 +20,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   private gameService: GameService = new GameService()
   private logger: Logger = new Logger('GameGateway')
+  private roomGateWay: RoomGateway = new RoomGateway()
 
   afterInit() {
     this.logger.log('Init')
@@ -75,9 +77,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`)
+    this.roomGateWay.getConcurrentPlayers(this.server)
   }
 
   handleConnection(client: Socket) {
     this.logger.log(`Client connected: ${client.id}`)
+    this.roomGateWay.getConcurrentPlayers(this.server)
   }
 }

@@ -53,9 +53,11 @@ export class RoomGateway {
     }
   }
   @SubscribeMessage(RoomEvents.ON_GET_PLAYERS)
-  async getConcurrentPlayers() {
-    const currentPlayers = this.server.sockets.sockets.size
-    const rooms = [...this.server.sockets.adapter.rooms.keys()].filter((roomId) => roomId.length === 4)
-    await this.server.emit(RoomEvents.GET_PLAYERS, { current: currentPlayers, roomList: rooms })
+  async getConcurrentPlayers(server = this.server) {
+    // const currentPlayers = this.server.sockets.sockets.size
+    const currentPlayers = server?.sockets.sockets.size
+    const rooms = server ? [...server.sockets.adapter.rooms.keys()].filter((roomId) => roomId.length === 4) : []
+    this.logger.log('current players: ', currentPlayers)
+    await server?.emit(RoomEvents.GET_PLAYERS, { current: currentPlayers ?? 0, roomList: rooms })
   }
 }
