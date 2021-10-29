@@ -29,6 +29,12 @@ export interface SurrenderState {
   surrenderer: number
 }
 
+export interface GameStartSettings {
+  roomId: string
+  gridSize: number
+  bombNumber: number
+}
+
 export interface GameStartPayload {
   gridState: number[][]
   playerTurn: number

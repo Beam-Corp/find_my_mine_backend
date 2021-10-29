@@ -10,7 +10,7 @@ import {
 
 import { Socket, Server } from 'socket.io'
 
-import { GameEvents, GameStartPayload, GameState, SurrenderState } from './game.events'
+import { GameEvents, GameStartPayload, GameStartSettings, GameState, SurrenderState } from './game.events'
 import { GameService } from './game.service'
 
 @WebSocketGateway({ cors: true })
@@ -30,13 +30,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage(GameEvents.START)
-  handleGameInit(client: Socket, roomId: string): void {
-    this.logger.log(`Starting Game for room id ${roomId}`)
+  handleGameInit(client: Socket, settings: GameStartSettings): void {
+    this.logger.log(`Starting Game for room id ${settings.roomId}`)
     const payload: GameStartPayload = {
-      gridState: this.gameService.generateGrid(12, 6),
+      gridState: this.gameService.generateGrid(settings.bombNumber, settings.gridSize),
       playerTurn: this.gameService.randomPlayer(),
     }
-    this.server.to(roomId).emit(GameEvents.ON_STARTED, payload)
+    this.server.to(settings.roomId).emit(GameEvents.ON_STARTED, payload)
   }
 
   @SubscribeMessage(GameEvents.SELECT_BLOCK)
@@ -60,17 +60,17 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage(GameEvents.RESTART)
-  handleRestart(client: Socket, roomId: string): void {
-    this.logger.log(`Restarting Game for room id ${roomId}`)
+  handleRestart(client: Socket, settings: GameStartSettings): void {
+    this.logger.log(`Restarting Game for room id ${settings.roomId}`)
     const gameState: GameState = {
       clickNumber: 0,
-      gridState: this.gameService.generateGrid(12, 6),
+      gridState: this.gameService.generateGrid(settings.bombNumber, settings.gridSize),
       playerTurn: this.gameService.randomPlayer(),
       scoreState: [0, 0],
-      roomId: roomId
+      roomId: settings.roomId,
     }
 
-    this.server.to(roomId).emit(GameEvents.ON_RESTART, gameState)
+    this.server.to(settings.roomId).emit(GameEvents.ON_RESTART, gameState)
   }
 
   handleDisconnect(client: Socket) {
