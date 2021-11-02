@@ -10,7 +10,7 @@ import {
 
 import { Socket, Server } from 'socket.io'
 
-import { GameEvents, GameStartPayload, GameStartSettings, GameState, SurrenderState } from './game.events'
+import { GameEvents, GameStartPayload, GameStartSettings, GameState, SurrenderState, MessagePayload } from './game.events'
 import { GameService } from './game.service'
 import { RoomGateway } from 'src/room/room.gateway'
 
@@ -73,6 +73,14 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 
     this.server.to(settings.roomId).emit(GameEvents.ON_RESTART, gameState)
+  }
+
+  @SubscribeMessage(GameEvents.SEND_MESSAGE)
+  handleSendMessage(client: Socket, payload: MessagePayload):void {
+    const roomId = payload[0].roomId
+    this.logger.log(`${roomId} has sent a message`)
+
+    this.server.to(roomId).emit(GameEvents.ON_SEND_MESSAGE, payload)
   }
 
   handleDisconnect(client: Socket) {
