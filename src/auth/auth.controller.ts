@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res, UseGuards, UsePipes } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt.guards';
 import { Cookies } from 'utils/decorators';
+import { validationPipe } from 'utils/validation';
 import { LoginDTO, PlayerDTO } from '../player/dto/player.dto';
 import { PlayerService } from '../player/player.service';
 import { JwtPayload } from './jwt.constant';
@@ -10,6 +11,7 @@ import { JwtPayload } from './jwt.constant';
 @Controller('auth')
 export class AuthController {
     constructor(private readonly playerService: PlayerService, private readonly authService: AuthService){}
+    @UsePipes(validationPipe)
     @Post("login")
     async login(@Body('payload') {userId,password}: LoginDTO, @Res({passthrough: true}) res:Response)  {
         const player = await this.playerService.login(userId,password);
@@ -22,19 +24,21 @@ export class AuthController {
         res
         return {userId: player.userId,role: player.role, customization: player.customization}
     }
+    @UsePipes(validationPipe)
     @Post("register")
     async register(@Body('payload') payload: PlayerDTO): Promise<boolean> {
         const player = await this.playerService.register(payload);
         return !!player;
     }
-
-    @Post('logout')
     @UseGuards(JwtAuthGuard)
+    @UsePipes(validationPipe)
+    @Post('logout')
     async logout(@Res({passthrough: true}) res:Response) {
         res.clearCookie('jwt')
         return {success: true}
     }
     @UseGuards(JwtAuthGuard)
+    @UsePipes(validationPipe)
     @Get("verify")
     async verify(@Cookies('jwt') token: string ){
         const payload = this.authService.decodeJwt<JwtPayload>(token);
