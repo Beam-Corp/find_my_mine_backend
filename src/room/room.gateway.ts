@@ -5,7 +5,6 @@ import { Socket, Server } from 'socket.io'
 import { v4 as uuidv4 } from 'uuid'
 
 import { ClientState, Introduction, RoomEvents } from './room.events'
-
 @WebSocketGateway({ cors: true })
 export class RoomGateway {
   @WebSocketServer() server: Server
@@ -57,6 +56,7 @@ export class RoomGateway {
     if (client.rooms.has(roomId)) {
       await client.leave(roomId)
       await client.to(roomId).emit(RoomEvents.LEAVE, username)
+      client.data.roomId = ""
       this.logger.log(`${client.id} leaves room ${roomId}`)
     }
   }
