@@ -13,3 +13,8 @@ export interface Introduction {
   username: string
   roomId: string
 }
+
+export interface ClientState {
+  roomId?: string,
+  username?: string
+}
