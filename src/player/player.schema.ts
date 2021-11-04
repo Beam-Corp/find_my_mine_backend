@@ -1,21 +1,24 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import { Customization } from './dto/player.dto';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 
+import { Document } from 'mongoose'
+
+import { Customization, GameplayStatistics } from './dto/player.dto'
 
 @Schema()
 export class Player {
   @Prop()
-  userId: string;
+  userId: string
   @Prop()
-  password: string;
+  password: string
   @Prop()
-  color: string;
+  color: string
   @Prop()
-  customization: Customization;
+  customization: Customization
   @Prop()
-  role: string;
+  role: string
+  @Prop()
+  statistics: GameplayStatistics
 }
 
-export const PlayerSchema = SchemaFactory.createForClass(Player);
-export type PlayerDoucument = Player & Document;
+export const PlayerSchema = SchemaFactory.createForClass(Player)
+export type PlayerDoucument = Player & Document

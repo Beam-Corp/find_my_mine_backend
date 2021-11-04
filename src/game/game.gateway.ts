@@ -1,3 +1,4 @@
+import { PlayerService } from 'src/player/player.service'
 import { RoomGateway } from 'src/room/room.gateway'
 
 import { Logger } from '@nestjs/common'
@@ -19,12 +20,15 @@ import {
   GameState,
   SurrenderState,
   MessagePayload,
+  EndGameState,
 } from './game.events'
 import { GameService } from './game.service'
 
 @WebSocketGateway({ cors: true })
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server
+
+  constructor(private readonly playerService: PlayerService) {}
 
   private gameService: GameService = new GameService()
   private logger: Logger = new Logger('GameGateway')
@@ -89,6 +93,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.logger.log(`Admin is restarting Game for room id ${roomId}`)
 
     this.server.to(roomId).emit(GameEvents.ON_ADMIN_RESTART)
+  }
+
+  @SubscribeMessage(GameEvents.UPDATE_STATS)
+  handleGameEnd(client: Socket, endGameState: EndGameState): void {
+    this.logger.log(`Game end at Room ${endGameState.roomId}`)
+    this.playerService.updateMatchHistory(endGameState)
   }
 
   @SubscribeMessage(GameEvents.SEND_MESSAGE)

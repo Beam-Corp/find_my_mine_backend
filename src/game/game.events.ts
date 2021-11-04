@@ -8,6 +8,7 @@ export enum GameEvents {
   RESTART = 'restart',
   ADMIN_RESTART = 'admin-restart',
   SEND_MESSAGE = 'send-message',
+  UPDATE_STATS = 'update-stats',
 
   // server to client
   ON_STARTED = 'on-started',
@@ -26,6 +27,15 @@ export interface GameState {
   scoreState: number[]
   playerTurn: number
   clickNumber: number
+}
+
+export interface EndGameState {
+  roomId: string
+  userId: string
+  scoreState: number[]
+
+  playerNumber: number
+  surrendererNumber: number
 }
 
 export interface SurrenderState {
