@@ -6,6 +6,7 @@ export enum GameEvents {
   END_GAME = 'end-game',
   SURRENDER = 'surrender',
   RESTART = 'restart',
+  ADMIN_RESTART = 'admin-restart',
   SEND_MESSAGE = 'send-message',
 
   // server to client
@@ -15,6 +16,7 @@ export enum GameEvents {
   ON_GAME_END = 'on-game-end',
   ON_SURRENDER = 'on-surrender',
   ON_RESTART = 'on-restart',
+  ON_ADMIN_RESTART = 'on-admin-restart',
   ON_SEND_MESSAGE = 'on-send-message',
 }
 

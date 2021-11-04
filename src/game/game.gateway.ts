@@ -45,7 +45,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const payload: GameStartPayload = {
       gridState: this.gameService.generateGrid(settings.bombNumber, settings.gridSize),
       playerTurn: this.gameService.randomPlayer(),
-      initialTimer: settings.initialTimer
+      initialTimer: settings.initialTimer,
     }
     this.server.to(settings.roomId).emit(GameEvents.ON_STARTED, payload)
   }
@@ -84,8 +84,15 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.server.to(settings.roomId).emit(GameEvents.ON_RESTART, gameState)
   }
 
+  @SubscribeMessage(GameEvents.ADMIN_RESTART)
+  handleAdminRestart(client: Socket, roomId: string): void {
+    this.logger.log(`Admin is restarting Game for room id ${roomId}`)
+
+    this.server.to(roomId).emit(GameEvents.ON_ADMIN_RESTART)
+  }
+
   @SubscribeMessage(GameEvents.SEND_MESSAGE)
-  handleSendMessage(client: Socket, payload: MessagePayload):void {
+  handleSendMessage(client: Socket, payload: MessagePayload): void {
     const roomId = payload[0].roomId
     this.logger.log(`${roomId} has sent a message`)
 
