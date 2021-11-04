@@ -1,9 +1,20 @@
 {
   "arrowParens": "always",
-  "printWidth": 150,
-  "singleQuote": false,
-  "semi": true,
+  "printWidth": 120,
+  "singleQuote": true,
+  "semi": false,
   "trailingComma": "es5",
   "tabWidth": 2,
-  "bracketSpacing": true
+  "bracketSpacing": true,
+  "importOrder": [
+    "^@nestjs/(.*)$",
+    "^@core/(.*)$",
+    "^@server/(.*)$",
+    "^@ui/(.*)$",
+    "^@(.*)/(.*)$",
+    "^((?!./).)*$",
+    "^[./]",
+    "^[../]*$"
+  ],
+  "importOrderSeparation": true
 }
