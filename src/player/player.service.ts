@@ -41,7 +41,7 @@ export class PlayerService {
   async updateMatchHistory(matchResult: EndGameState) {
     const { surrendererNumber, scoreState, playerNumber, userId } = matchResult
 
-    const player: Player = await this.findByPlayerId(userId)
+    const player: Player = await this.findByPlayerId(userId.substring(2))
 
     if (player) {
       let { winCount, drawCount, loseCount } = player.statistics
@@ -56,7 +56,7 @@ export class PlayerService {
 
       const updatedStatistics = { winCount, drawCount, loseCount }
 
-      await this.playerModel.findOneAndUpdate({ userId: userId }, { statistics: updatedStatistics })
+      await this.playerModel.findOneAndUpdate({ userId: userId.substring(2) }, { statistics: updatedStatistics })
     }
   }
 }
