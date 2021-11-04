@@ -49,10 +49,14 @@ export class PlayerService {
       const playerIndex = playerNumber - 1
       const scoreResult = scoreState[playerIndex] - scoreState[(playerIndex + 1) % 2]
 
-      if (surrendererNumber === playerNumber) loseCount += 1
-      else if (scoreResult < 0) loseCount += 1
-      else if (scoreResult > 0) winCount += 1
-      else if (scoreResult === 0) drawCount += 1
+      if (surrendererNumber > 0 && surrendererNumber === playerNumber) loseCount += 1
+      else if (surrendererNumber > 0 && surrendererNumber !== playerNumber) winCount += 1
+
+      if (surrendererNumber === 0) {
+        if (scoreResult < 0) loseCount += 1
+        else if (scoreResult > 0) winCount += 1
+        else if (scoreResult === 0) drawCount += 1
+      }
 
       const updatedStatistics = { winCount, drawCount, loseCount }
 
