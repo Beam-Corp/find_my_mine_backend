@@ -1,3 +1,5 @@
+import { RoomGateway } from 'src/room/room.gateway'
+
 import { Logger } from '@nestjs/common'
 import {
   SubscribeMessage,
@@ -10,9 +12,15 @@ import {
 
 import { Socket, Server } from 'socket.io'
 
-import { GameEvents, GameStartPayload, GameStartSettings, GameState, SurrenderState, MessagePayload } from './game.events'
+import {
+  GameEvents,
+  GameStartPayload,
+  GameStartSettings,
+  GameState,
+  SurrenderState,
+  MessagePayload,
+} from './game.events'
 import { GameService } from './game.service'
-import { RoomGateway } from 'src/room/room.gateway'
 
 @WebSocketGateway({ cors: true })
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -37,6 +45,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const payload: GameStartPayload = {
       gridState: this.gameService.generateGrid(settings.bombNumber, settings.gridSize),
       playerTurn: this.gameService.randomPlayer(),
+      initialTimer: settings.initialTimer
     }
     this.server.to(settings.roomId).emit(GameEvents.ON_STARTED, payload)
   }

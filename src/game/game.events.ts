@@ -35,11 +35,13 @@ export interface GameStartSettings {
   roomId: string
   gridSize: number
   bombNumber: number
+  initialTimer: number
 }
 
 export interface GameStartPayload {
   gridState: number[][]
   playerTurn: number
+  initialTimer: number
 }
 
 export interface MessagePayload {
