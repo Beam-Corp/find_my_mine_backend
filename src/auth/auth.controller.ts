@@ -18,12 +18,10 @@ export class AuthController {
         const token = this.authService.getJwt(player.userId,player.role);
         res.cookie('jwt', token, {
           httpOnly: true,
-          domain: process.env.DOMAIN || "localhost", 
           expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
           secure: true,
           sameSite: "none"
         })
-        res
         return {userId: player.userId,role: player.role, customization: player.customization}
     }
     @UsePipes(validationPipe)
