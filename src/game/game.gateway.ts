@@ -76,7 +76,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const gameState: GameState = {
       clickNumber: 0,
       gridState: this.gameService.generateGrid(settings.bombNumber, settings.gridSize),
-      playerTurn: this.gameService.randomPlayer(),
+      playerTurn: settings.nextPlayerTurn ?? this.gameService.randomPlayer(),
       scoreState: [0, 0],
       roomId: settings.roomId,
     }

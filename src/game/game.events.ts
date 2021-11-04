@@ -38,6 +38,7 @@ export interface GameStartSettings {
   gridSize: number
   bombNumber: number
   initialTimer: number
+  nextPlayerTurn?: number
 }
 
 export interface GameStartPayload {
